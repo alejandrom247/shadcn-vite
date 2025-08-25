@@ -1,6 +1,7 @@
 import type { loginSchema } from "@/schema/loginSchema";
 import type { userSchema } from "@/schema/userSchema";
 import type z from "zod";
+import Error from 'ky'
 
 export type Login = z.infer<typeof loginSchema>
 

@@ -13,4 +13,6 @@ export const loginSchema = userSchema.omit({
     createdAt: true,
     updatedAt: true
 }).extend({
-    password: z.string().min(1, "La contraseña es obligatoria")})
+    password: z.string().min(1, "La contraseña es obligatoria"),
+    username: z.string().min(1, "El nombre de usuario es obligatorio")
+})

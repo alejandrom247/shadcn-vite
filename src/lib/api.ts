@@ -1,5 +1,8 @@
-import ky from 'ky'
+import ky, { type KyResponse } from 'ky'
+import type { KyHeadersInit } from 'node_modules/ky/distribution/types/options';
 import { CookieJar } from "tough-cookie"
+
+
 
 const cookieJar = new CookieJar()
 export const api = ky.create({
@@ -23,7 +26,6 @@ export const api = ky.create({
                         await cookieJar.setCookie(cookie, url);
                     }
                 }
-            }
-        ]
+            }],
     }
 })

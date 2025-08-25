@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/login/login-form"
+import { Toaster } from 'sonner'
 
 export default function LoginPage() {
   return (
@@ -8,6 +9,7 @@ export default function LoginPage() {
     SISTEMA DE GESTIÓN DEL DEPARTAMENTO DE INFORMÁTICA
     </div>
     <LoginForm />
+    <Toaster richColors={true} />
       </div>
     </div>
   )

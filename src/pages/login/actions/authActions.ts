@@ -1,11 +1,14 @@
 import { api } from "@/lib/api";
 import type { Login, User } from "@/lib/types";
-import z from 'zod'
+import { HTTPError } from "ky";
 
 type LoginResponse = {
-error?: string,
 message?:string,
 data: User,
+}
+type LoginErrorResponse = {
+    error:string,
+    data: null
 }
 
 function validateEmail(email:string){
@@ -13,7 +16,8 @@ function validateEmail(email:string){
     return regex.test(email)
 }
 
-export async function login(loginData:Login){
+export async function login(loginData:Login) {
+    try{
     if (!validateEmail(loginData.username)){
         let loginDataWEmail = {
             username: loginData.username,
@@ -29,7 +33,17 @@ export async function login(loginData:Login){
             password: loginData.password
         }
         const response = await api.post<LoginResponse>("auth/login", {json: loginDataWUsername}).json()
+
         return response;
     }
+}catch(error){
+    if (error instanceof HTTPError){
+        const errorBody: LoginErrorResponse = await error.response.json();
+        throw new Error(errorBody.error);
+    }
+    if(error instanceof SyntaxError){
+        throw new Error('Respuesta del servidor invalida')
+    }
+}
 
 }
