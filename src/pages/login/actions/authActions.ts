@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 import type { Login, User } from "@/lib/types";
-import { HTTPError } from "ky";
+import ky, { HTTPError } from "ky";
 
 type LoginResponse = {
 message?:string,
@@ -46,4 +46,18 @@ export async function login(loginData:Login) {
     }
 }
 
+}
+
+/*export async function getAccessToken(){
+    const accessToken = ky.get()
+}*/
+
+type GetMeResponse = {
+    error: string;
+    user: User;
+}
+
+export async function getMe() {
+    const response = await api.get<GetMeResponse>("/user/me").json();
+    return response.user
 }
