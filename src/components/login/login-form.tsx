@@ -10,13 +10,33 @@ import { Input } from "@/components/ui/input"
 import { useLogin } from "@/hooks/useLogin"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import LoadingButton from "../LoadingButton"
+import { useCookies } from "react-cookie"
+import { useEffect } from "react"
+import { getMe } from "@/pages/login/actions/authActions"
+import { useAuthStore } from "@/hooks/useAuthStore"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
+  
   const {form, loginMutation, onSubmit, onError} = useLogin()
+  /*useEffect(()=>{
+    const [cookies] = useCookies(['access_token'])
+    if(cookies){
+      console.log(cookies.access_token)
+        getMe().then(user => {
+        useAuthStore.getState().setUser(user)
+      }
+      ).catch(
+        _error=>{
+          useAuthStore.getState().setUser(null);
+          console.error(_error)
+        }
+      )
+    }
+  }, [])*/
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

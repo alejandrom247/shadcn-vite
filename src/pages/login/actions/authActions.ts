@@ -4,6 +4,7 @@ import ky, { HTTPError } from "ky";
 
 type LoginResponse = {
 message?:string,
+accesToken: string,
 data: User,
 }
 type LoginErrorResponse = {
@@ -58,6 +59,6 @@ type GetMeResponse = {
 }
 
 export async function getMe() {
-    const response = await api.get<GetMeResponse>("/user/me").json();
+    const response = await api.get<GetMeResponse>("auth/getme").json();
     return response.user
 }
