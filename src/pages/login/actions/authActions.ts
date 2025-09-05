@@ -1,10 +1,11 @@
 import { api } from "@/lib/api";
 import type { Login, User } from "@/lib/types";
-import ky, { HTTPError } from "ky";
+import { HTTPError } from "ky";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 type LoginResponse = {
 message?:string,
-accesToken: string,
+accessToken: string,
 data: User,
 }
 type LoginErrorResponse = {
@@ -26,16 +27,24 @@ export async function login(loginData:Login) {
             
         }
     const response = await api.post<LoginResponse>("auth/login", {json: loginDataWEmail}).json()
-    return response;
+    if(response && response.accessToken){
+        useAuthStore.getState().setToken(response.accessToken)
+        useAuthStore.getState().setUser(response.data);
+        return response;
+    }
     }
     else {
         let loginDataWUsername = {
             email: loginData.username,
             password: loginData.password
         }
+        
         const response = await api.post<LoginResponse>("auth/login", {json: loginDataWUsername}).json()
-
+        if(response && response.accessToken){
+        useAuthStore.getState().setToken(response.accessToken)
+        useAuthStore.getState().setUser(response.data);
         return response;
+                    }
     }
 }catch(error){
     if (error instanceof HTTPError){

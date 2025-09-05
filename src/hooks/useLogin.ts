@@ -5,6 +5,7 @@ import { loginSchema } from "@/schema/loginSchema";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/pages/login/actions/authActions";
 import { toast } from "sonner";
+//import { useAuthStore } from "./useAuthStore";
 
 export const useLogin = () => {
 
@@ -19,10 +20,13 @@ export const useLogin = () => {
     const loginMutation = useMutation({
         mutationFn: async (data: Login)=> {
             const response = await login(data);
+            localStorage.setItem('accessToken', response?.accessToken ? response.accessToken : "")
             return response; 
         },
         onSuccess: (data) => {
+            
             toast.success(data?.message)
+
         },
         onError: (error) => {
             toast.error(error.message)
