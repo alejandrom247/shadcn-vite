@@ -1,4 +1,3 @@
-import App from "@/App";
 import { createBrowserRouter } from "react-router-dom";
 import { PublicRoute } from "./PublicRoute";
 import { PrivateRoute } from "./PrivateRoute";

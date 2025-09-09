@@ -1,5 +1,4 @@
-import { useAuthStore } from '@/hooks/useAuthStore'
-import ky, { HTTPError } from 'ky'
+import ky, { HTTPError, type KyResponse } from 'ky'
 import { CookieJar } from "tough-cookie"
 
 type RefreshTokenResponse = {
@@ -9,7 +8,7 @@ type RefreshTokenResponse = {
 }
 
 type ErrorResponse = {
-    message: string,
+    error: string,
     data: null;
 }
 
@@ -20,7 +19,7 @@ export const api = ky.create({
     retry: {
         limit: 4,
         delay: (attempt) => Math.min(attempt * 500, 3000),
-        statusCodes: [401, 403, 500]
+        statusCodes: [401, 500]
     },
     hooks: {
         beforeRequest: [
@@ -60,19 +59,19 @@ export const api = ky.create({
                     }
                 }
                 if(response.ok){
-                    return;
-                }
-               /* switch (response.status){
-                    case 401 | 403:
+                    return response;
+                }else {
+                switch (response.status){
+                    case 401:
                         await handleAuthenticationRefresh();
                         return ky(request)
                     case 500:
                         throw new Error('Servidor caido intente mas tarde')
                     default:
-                        const error = (await response.json()) as ErrorResponse
-                        throw new Error(error.message)
-                }*/
-            }],
+                        const error = await response.json<ErrorResponse>()
+                        return error.error
+                }
+            }}],
           /*  beforeRetry: [
                 async ({request, error, retryCount}) => {
                     if (error instanceof HTTPError && (error.response.status === 403 || error.response.status === 401) && retryCount === 1){
@@ -112,8 +111,8 @@ export const api = ky.create({
 
 async function handleAuthenticationRefresh(){
     try {
-    const newAccessTokenUrl = `http://${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}/api/v1/auth/refresh-token`;
-    const response = await ky.post<RefreshTokenResponse>(newAccessTokenUrl, {credentials:  'include'}).json();
+    const newAccessTokenUrl = `auth/refresh-token`;
+    const response = await api.post<RefreshTokenResponse>(newAccessTokenUrl, {credentials:  'include'}).json();
     if(response.accessToken){
     localStorage.setItem('accessToken', response.accessToken)
     } else {
@@ -123,7 +122,7 @@ async function handleAuthenticationRefresh(){
     if(error instanceof HTTPError){
     throw new Error(error.message)
 } else {
-    throw new Error('No se puede refrescar el acceso')
+ throw new Error('No se puede refrescar el acceso')
 }
 }
 }

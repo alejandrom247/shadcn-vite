@@ -7,9 +7,9 @@ type Props ={
 }
 
 export function PrivateRoute({ children }: Props){
-    const token = useAuthStore.getState().token;
-
-    if(!token){
+    const {user} = useAuthStore()
+    
+    if(!user){
         return <Navigate to={"/"} />
     }
     return children;

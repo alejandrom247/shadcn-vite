@@ -7,9 +7,9 @@ type Props ={
 }
 
 export function PublicRoute({ children }: Props){
-    const token = useAuthStore.getState().token;
+    const { user } = useAuthStore();
 
-    if(token){
+    if(user){
         return <Navigate to={"/dashboard"} />
     }
     return children;
