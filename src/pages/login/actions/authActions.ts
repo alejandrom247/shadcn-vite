@@ -27,24 +27,15 @@ export async function login(loginData:Login) {
             
         }
     const response = await api.post<LoginResponse>("auth/login", {json: loginDataWEmail}).json()
-    if(response && response.accessToken){
-        useAuthStore.getState().setToken(response.accessToken)
-        useAuthStore.getState().setUser(response.data);
         return response;
-    }
     }
     else {
         let loginDataWUsername = {
             email: loginData.username,
             password: loginData.password
         }
-        
         const response = await api.post<LoginResponse>("auth/login", {json: loginDataWUsername}).json()
-        if(response && response.accessToken){
-        useAuthStore.getState().setToken(response.accessToken)
-        useAuthStore.getState().setUser(response.data);
         return response;
-                    }
     }
 }catch(error){
     if (error instanceof HTTPError){
@@ -64,10 +55,10 @@ export async function login(loginData:Login) {
 
 type GetMeResponse = {
     error: string;
-    user: User;
+    data: User;
 }
 
 export async function getMe() {
     const response = await api.get<GetMeResponse>("auth/getme").json();
-    return response.user
+    return response.data
 }

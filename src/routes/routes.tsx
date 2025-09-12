@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import { PublicRoute } from "./PublicRoute";
 import { PrivateRoute } from "./PrivateRoute";
+import App from "@/App";
 import LoginPage from "@/pages/login/loginpage";
+import RootLayout from "@/pages/layout";
+import HomePage from "@/pages/dashboard/page";
 
 export const router = createBrowserRouter([
 {
@@ -13,7 +16,9 @@ export const router = createBrowserRouter([
 {
     path: "/dashboard",
     element: <PrivateRoute>
-        <div>Dashboard</div>
+        <RootLayout>
+       <HomePage />
+        </RootLayout>
     </PrivateRoute>
 }
 ])
